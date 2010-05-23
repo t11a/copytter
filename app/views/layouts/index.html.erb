@@ -1,0 +1,39 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+<title><%= controller.action_name %></title>
+<%= stylesheet_link_tag 'style' %>
+</head> 
+<body> 
+<div id="container"> 
+  <div id="header"><h1>copytter</h1></div> 
+    <div id="wrapper"> 
+      <div id="content"> 
+        <%= yield %> 
+      </div> 
+    </div>
+  <% if session[:oauth] %>
+    <div id="navigation">
+        <%= image_tag session[:profile_image_url] %>
+        <%= session[:name] %>(<%= session[:screen_name] %>)さん<br>
+        following : <%= session[:friends_count] %> users<br>
+        followed  : <%= session[:followers_count] %> users<br>
+        total tweets : <%= session[:statuses_count] %>
+    </div>
+  <% else %>
+    <div id="extra"> 
+      <p><strong>pakutterへようこそ。</strong><br>
+        twitter IDを使ってログインしてください。OAuth対応ですので等サービスにパスワード情報を知らせる必要はありません。 
+      </p>
+      <p>
+        <%= image_tag '/images/Sign-in-with-Twitter-lighter.png' %>を押すとtwitterのログイン画面に遷移します。
+        すでにtwitterにログイン済みの場合は認証画面に遷移します。
+      </p>
+    </div>
+  <% end %>
+  <div id="footer"><p>Copyright &copy; 2010 2yo4 All rights reserved. </p></div> 
+</div> 
+</body> 
+</html>

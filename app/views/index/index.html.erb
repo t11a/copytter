@@ -1,0 +1,34 @@
+<% if flash[:notice] %>
+  <div id="notice"><%= flash[:notice] %></div>
+<% end %>
+
+<% unless session[:oauth] %>
+<div align="center">
+  <% form_tag :action => 'oauth' do %>
+    <br>
+    <%= image_submit_tag '/images/Sign-in-with-Twitter-lighter.png' %>
+  <% end %>
+</div>
+<% else %>
+  <div id="statuses_update">
+    <% form_tag '/tweet' do %>
+      つぶやく<br>
+      <%= text_area_tag 'tweet', nil, :size => "60x3" %>
+      <%= submit_tag 'tweet' %>
+    <% end %>
+  </div>
+  <div id="frieds_timeline">
+    <dl>
+      <% @statuses.each_with_index do |status, i|
+        user = status['user']
+      %>
+      <dt><%= image_tag user['profile_image_url'] %></dt>
+      <dd>
+        <%= user['name'] %>(<%= user['screen_name'] %>)<br>
+        <%= status['text'] %><br>
+  	    from <%= status['source'] %>
+      </dd>
+      <% end %>
+    </dl>
+  </div>
+<% end %>
