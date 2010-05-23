@@ -1,7 +1,5 @@
 class IndexController < ApplicationController
   def index
-    p_obj session[:oauth_token]
-    p_obj session[:name]
     if session[:oauth]
       # get access token
       access_token = OAuth::AccessToken.new(
@@ -45,12 +43,26 @@ class IndexController < ApplicationController
       session[:request_token],
       session[:request_token_secret]
     )
+  begin
     access_token = request_token.get_access_token(
       {},
       :oauth_token => params[:oauth_token],
       :oauth_verifier => params[:oauth_verifier]
     )
-
+  rescue => err
+    case err
+    when OAuth::Unauthorized
+      reset_session
+      flash[:notice] = err.to_s
+      redirect_to :action => :index
+      return
+    else
+      reset_session
+      flash[:notice] = "Unknown Error."
+      redirect_to :action => :index
+      return
+    end
+  end
     # check the validity of access token
     response = consumer.request(
       :get,
