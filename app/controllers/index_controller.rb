@@ -124,7 +124,66 @@ class IndexController < ApplicationController
       
     redirect_to :action => :index
   end
+  
+  def rank
+    uri_friends_tl = "http://api.twitter.com/1/statuses/friends_timeline.json"
+    count = "200"
+    page  = 3
+    
+    # get access token
+    access_token = OAuth::AccessToken.new(
+      self.consumer,
+      session[:oauth_token],
+      session[:oauth_verifier]
+    )
+    
+    # get max id of friends TL
+    response = access_token.get( uri_friends_tl + "?count=1" )
+    statuses = JSON.parse(response.body).each.collect {|status|
+      status
+    }
 
+    max_id = nil
+    statuses.each do |status|
+      max_id = status['id'].to_s
+    end
+
+    if max_id.nil?
+      flash[:notice] = "GET Max tweet ID FAILURE.Please try again after a while."
+      redirect_to :action => :index
+      return
+    end
+    
+    # get user histgram
+    @user_hist = Hash::new
+    @user_prof = Hash::new
+    @created_at = ""
+    page.times {|pg|
+      uri = uri_friends_tl + "?max_id=" + max_id + "&count=" + count + "&page=" + (pg+1).to_s
+      response = access_token.get( uri )
+      JSON.parse(response.body).each {|status|
+        @created_at = status['created_at']
+        user = status['user']
+        screen_name = user['screen_name']
+        if @user_hist.include?(screen_name)
+          @user_hist[screen_name] += 1
+        else
+          @user_hist[screen_name] = 1
+        end
+        
+        if !@user_prof.key?(screen_name)
+          @user_prof[screen_name] = user['profile_image_url']
+        end
+      }
+    }
+
+  end
+
+  def logout
+    reset_session
+    redirect_to :action => :index
+  end
+  
   private
   def p_obj obj
     p "#####"

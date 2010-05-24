@@ -1,0 +1,19 @@
+<% if flash[:notice] %>
+  <div id="notice"><%= flash[:notice] %></div>
+<% else %>
+
+<%= Time.parse(@created_at) %>から現時点までの結果。
+  <table>
+    <tbody>
+<% @user_hist.sort {|a,b| b[1] <=> a[1] }.each{|key, value| %>
+      <tr>
+        <td>
+          <%= image_tag @user_prof[key] %><br>
+          <%= key %>さん
+        </td>
+        <td><%= value %> tweets</td>
+      </tr>
+<% } %>
+    </tbody>
+  </table>
+<% end %>

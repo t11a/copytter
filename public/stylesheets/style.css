@@ -32,8 +32,16 @@ div#navigation{
   background:#E0FFFF
 }
 
-div#extra{
+div#manage{
+  background:#E6E6FA
+}
+
+div#navi{
   background:#FFDAB9
+}
+
+div#rank{
+  background:#FAFAD2
 }
 
 div#footer{
@@ -56,12 +64,24 @@ div#content{
   margin-left:33%
 }
 
+div#manage{
+  float:right;
+  clear:right;
+  width:32.9%
+}
+
 div#navigation{
   float:right;
   width:32.9%
 }
 
-div#extra{
+div#navi{
+  float:right;
+  clear:right;
+  width:32.9%
+}
+
+div#rank{
   float:right;
   clear:right;
   width:32.9%

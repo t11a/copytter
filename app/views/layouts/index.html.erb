@@ -15,17 +15,29 @@
       </div> 
     </div>
   <% if session[:oauth] %>
+    <div id="manage">
+      <%= link_to "top", :controller=>'index', :action=>'index' %>&nbsp;&nbsp;&nbsp;
+      <%= link_to "logout", :controller=>'index', :action=>'logout' %>
+      <br><br><br>
+    </div>
     <div id="navigation">
         <%= image_tag session[:profile_image_url] %>
         <%= session[:name] %>(<%= session[:screen_name] %>)さん<br>
         following : <%= session[:friends_count] %> users<br>
         followed  : <%= session[:followers_count] %> users<br>
         total tweets : <%= session[:statuses_count] %>
+        <br><br>
+    </div>
+    <div id="rank">
+      <%= link_to "つぶやきランキング", :controller=>'index', :action=>'rank' %><br>
+      あなたのTLのtweetを現時点から過去に翻って集計し、ユーザごとのtweet数を表示します。<br>
+      (開発者注：若干ロードに時間がかかるかもしれません。エラーになったらしばらくして再チェレンジしてみてください。)
+      <br><br>
     </div>
   <% else %>
-    <div id="extra"> 
+    <div id="navi"> 
       <p><strong>copytterへようこそ。</strong><br>
-        twitter IDを使ってログインしてください。OAuth対応ですので等サービスにパスワード情報を知らせる必要はありません。 
+        twitter IDを使ってログインしてください。OAuth対応ですので当サービスにパスワード情報を知らせる必要はありません。 
       </p>
       <p>
         <%= image_tag '/images/Sign-in-with-Twitter-lighter.png' %>を押すとtwitterのログイン画面に遷移します。
