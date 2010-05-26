@@ -2,18 +2,23 @@
   <div id="notice"><%= flash[:notice] %></div>
 <% else %>
 
-<%= Time.parse(@created_at) %>から現時点までの結果。
-  <table>
-    <tbody>
-<% @user_hist.sort {|a,b| b[1] <=> a[1] }.each{|key, value| %>
-      <tr>
-        <td>
-          <%= image_tag @user_prof[key] %><br>
-          <%= key %>さん
-        </td>
-        <td><%= value %> tweets</td>
-      </tr>
-<% } %>
-    </tbody>
-  </table>
+<%= time_format(Time.parse(@created_at)) %>から現時点までの結果。(計<%= @sum %> tweets)
+<br>
+<%
+  index = 0
+  @user_hist.sort {|a,b| b[1] <=> a[1] }.each{|key, value|
+%>
+  <% tmp_hash = @user_prof[key] %>
+  <a href="javascript:onclick=$('.hide<%=index.to_s%>').toggle('normal');"><%= image_tag tmp_hash['profile_image_url'] %></a>&nbsp;<%= value %> tweets
+  <br>
+  <dt><%= key %>(<%= tmp_hash['name'] %>)さん</dt>
+  <% @user_text[key].each do |text| %>
+    <dd class="hide<%=index.to_s%>" style="display: none">
+      <%= time_format(Time.parse(text[1])) %>&nbsp;<%= text[0] %>
+    </dd>
+  <% end %>
+<%
+    index += 1
+  }
+%>
 <% end %>

@@ -157,7 +157,10 @@ class IndexController < ApplicationController
     # get user histgram
     @user_hist = Hash::new
     @user_prof = Hash::new
-    @created_at = ""
+    @user_text = Hash::new
+    
+    @created_at = "" # store latest time
+    @sum = 0          # store total tweets
     page.times {|pg|
       uri = uri_friends_tl + "?max_id=" + max_id + "&count=" + count + "&page=" + (pg+1).to_s
       response = access_token.get( uri )
@@ -165,6 +168,7 @@ class IndexController < ApplicationController
         @created_at = status['created_at']
         user = status['user']
         screen_name = user['screen_name']
+        
         if @user_hist.include?(screen_name)
           @user_hist[screen_name] += 1
         else
@@ -172,8 +176,25 @@ class IndexController < ApplicationController
         end
         
         if !@user_prof.key?(screen_name)
-          @user_prof[screen_name] = user['profile_image_url']
+          tmp_hash = Hash::new
+          tmp_hash['name'] = user['name']
+          tmp_hash['profile_image_url'] = user['profile_image_url']
+          
+          @user_prof[screen_name] = tmp_hash
         end
+        
+        if @user_text.key?(screen_name)
+          ary = Array::new
+          ary = @user_text[screen_name]
+          ary.push([status['text'], @created_at])
+          @user_text[screen_name] = ary
+        else
+          ary = Array::new
+          ary.push([status['text'], @created_at])
+          @user_text[screen_name] = ary
+        end
+        
+        @sum += 1
       }
     }
 
