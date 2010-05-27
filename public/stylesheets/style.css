@@ -91,3 +91,7 @@ div#footer{
   clear:both;
   width:100%
 }
+
+img.pointer {
+  cursor:pointer;
+}

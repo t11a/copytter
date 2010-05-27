@@ -9,14 +9,15 @@
   @user_hist.sort {|a,b| b[1] <=> a[1] }.each{|key, value|
 %>
   <% tmp_hash = @user_prof[key] %>
-  <a href="javascript:onclick=$('.hide<%=index.to_s%>').toggle('normal');"><%= image_tag tmp_hash['profile_image_url'] %></a>&nbsp;<%= value %> tweets
+  <img class="pointer" src="<%= tmp_hash['profile_image_url'] %>" onclick="$('.hide<%=index.to_s%>').toggle('fast');" width="48">&nbsp;<%= value %> tweets
   <br>
-  <dt><%= key %>(<%= tmp_hash['name'] %>)さん</dt>
+  <dt><%= key %>(<%= tmp_hash['name'] %>)</dt>
   <% @user_text[key].each do |text| %>
-    <dd class="hide<%=index.to_s%>" style="display: none">
-      <%= time_format(Time.parse(text[1])) %>&nbsp;<%= text[0] %>
+    <dd class="hide<%=index.to_s%>" style="display: none;background-color:<%= cycle("#FDF5E6","#AFEEEE") -%>;">
+      <b>[<%= time_format(Time.parse(text[1])) %>]</b>&nbsp;<%= text[0] %>
     </dd>
   <% end %>
+  <% reset_cycle %>
 <%
     index += 1
   }
