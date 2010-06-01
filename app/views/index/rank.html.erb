@@ -14,7 +14,7 @@
   <dt><%= key %>(<%= tmp_hash['name'] %>)</dt>
   <% @user_text[key].each do |text| %>
     <dd class="hide<%=index.to_s%>" style="display: none;background-color:<%= cycle("#FDF5E6","#AFEEEE") -%>;">
-      <b>[<%= time_format(Time.parse(text[1])) %>]</b>&nbsp;<%= text[0] %>
+      <b>[<%= time_format(Time.parse(text[1])) %>]</b>&nbsp;<%= find_uri(text[0]) %>
     </dd>
   <% end %>
   <% reset_cycle %>
