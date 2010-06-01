@@ -6,6 +6,7 @@ require 'json'
 class ApplicationController < ActionController::Base
   helper :all # include all helpers, all the time
   protect_from_forgery # See ActionController::RequestForgeryProtection for details
+  before_filter :authorize, :except=>['index', 'oauth', 'callback']
 
   protected
   def consumer
@@ -14,5 +15,12 @@ class ApplicationController < ActionController::Base
       'CONSUMER SECRET',
       {:site => "http://twitter.com/"}
     )
+  end
+  
+  def authorize
+    unless session[:oauth]
+      flash[:notice] = "Please Sign in With twitter."
+      redirect_to :controller=>'index', :action=>'index'
+    end
   end
 end
