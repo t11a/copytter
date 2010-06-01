@@ -25,7 +25,7 @@
       <dt><%= image_tag user['profile_image_url'] %></dt>
       <dd>
         <%= user['name'] %>(<%= user['screen_name'] %>)<br>
-        <%= status['text'] %><br>
+        <%= find_uri(status['text']) %><br>
   	    from <%= status['source'] %>
       </dd>
       <% end %>
