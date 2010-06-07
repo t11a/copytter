@@ -1,0 +1,23 @@
+<% if flash[:notice] %>
+  <div id="notice"><%= flash[:notice] %></div>
+<% else %>
+  <table align="center">
+    <tbody>
+  <%
+    @dms.sort {|a, b|
+      [b[0], a[1]] <=> [a[0], b[1]]
+    }.each do |dm|
+      user_flag = dm[1]['user_flag']
+      style_img = ""
+      style_txt = "style='background: #ffffcc;'"
+      if user_flag
+        style_img = "align='right'"
+        style_txt = "align='right' style='background: #ffcccc;' width='600px'"
+      end  
+  %>
+    <tr><td <%= style_img %> ><img src="<%= dm[1]['profile_image_url'] %>"></td></tr>
+    <tr><td <%= style_txt %> >[<%= time_format(dm[0]) %>]<%= find_uri(dm[1]['text']) %></td></tr>
+  <% end %>
+    </tbody>
+  </table>
+<% end %>

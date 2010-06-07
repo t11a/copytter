@@ -1,5 +1,6 @@
 class IndexController < ApplicationController
   def index
+    p_obj session
     if session[:oauth]
       # get access token
       access_token = OAuth::AccessToken.new(
@@ -78,6 +79,7 @@ class IndexController < ApplicationController
         redirect_to :action => :index
       end
       # set user info
+      session[:id]                = @user_info['id']
       session[:name]              = @user_info['name']
       session[:screen_name]       = @user_info['screen_name']
       session[:profile_image_url] = @user_info['profile_image_url']
@@ -200,12 +202,99 @@ class IndexController < ApplicationController
 
   end
 
+  def dm_inbox
+    # get access token
+    access_token = OAuth::AccessToken.new(
+      self.consumer,
+      session[:oauth_token],
+      session[:oauth_verifier]
+    )
+    
+    uri_dm = "http://api.twitter.com/1/direct_messages.json"
+    count = "100"
+    
+    response = access_token.get( uri_dm + "?count=" + count )
+    case response
+    when Net::HTTPSuccess
+      @d_msgs = JSON.parse(response.body)
+    else
+      flash[:notice] = "get DM INBOX Error."
+    end
+  end
+  
+  def dm_send_box
+    # get access token
+    access_token = OAuth::AccessToken.new(
+      self.consumer,
+      session[:oauth_token],
+      session[:oauth_verifier]
+    )
+    
+    uri_dm = "http://api.twitter.com/1/direct_messages/sent.json"
+    count = "100"
+
+    response = access_token.get( uri_dm + "?count=" + count )
+    case response
+    when Net::HTTPSuccess
+      @d_msgs = JSON.parse(response.body)
+    else
+      flash[:notice] = "get DM INBOX Error."
+    end
+  end
+  
+  def dm_box
+    uri_dm       = "http://api.twitter.com/1/direct_messages.json"
+    uri_dm_sent  = "http://api.twitter.com/1/direct_messages/sent.json"
+    
+    # get access token
+    access_token = OAuth::AccessToken.new(
+      self.consumer,
+      session[:oauth_token],
+      session[:oauth_verifier]
+    )
+    
+    res_a = get_response(uri_dm, access_token, 100)
+    res_b = get_response(uri_dm_sent, access_token, 100)
+
+    @dms = res_a + res_b
+=begin
+    # sort by time(1st element)
+    (res_a + res_b).sort {|a, b|
+      [b[0], a[1]] <=> [a[0], b[1]]
+    }.each do |arr|
+      p arr
+    end
+=end
+  end
+
   def logout
     reset_session
     redirect_to :action => :index
   end
   
   private
+  def get_response(uri, token, count=50)
+    response = token.get( uri + "?count=" + count.to_s )
+    case response
+    when Net::HTTPSuccess
+      res = JSON.parse(response.body).each.collect do |d_msg|
+        sender = d_msg['sender']
+        recipient = d_msg['recipient']
+  
+        text_hash = Hash::new
+        text_hash['s_name'] = sender['name']
+        text_hash['r_name'] = recipient['name']
+        text_hash['profile_image_url'] = sender['profile_image_url']
+        text_hash['text'] = d_msg['text']
+        text_hash['user_flag'] = true if sender['id'] == session[:id]
+  
+        [Time.parse(d_msg['created_at']), text_hash]
+      end
+    else
+      flash[:notice] = "get DM Error."
+    end
+  end
+
   def p_obj obj
     p "#####"
     p obj

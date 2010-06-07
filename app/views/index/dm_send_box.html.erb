@@ -1,0 +1,12 @@
+<% if flash[:notice] %>
+  <div id="notice"><%= flash[:notice] %></div>
+<% else %>
+  <%
+    @d_msgs.each do |d_msg|
+      sender    = d_msg['sender']
+      recipient = d_msg['recipient']
+  %>
+    <dt>to <img src="<%= recipient['profile_image_url'] %>"></dt>
+    <dd style="background-color: #D3D3D3;">[<%= time_format(Time.parse(d_msg['created_at'])) %>]<%= find_uri(d_msg['text']) %></dd>
+  <% end %>
+<% end %>

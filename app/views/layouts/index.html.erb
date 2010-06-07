@@ -36,6 +36,13 @@
       (開発者注：若干ロードに時間がかかるかもしれません。エラーになったらしばらくして再チャレンジしてみてください。)
       <br><br>
     </div>
+    <div id="dm">
+      <%= link_to "DM-BOX", :controller=>'index', :action=>'dm_box' %><br>
+      <%= link_to "受信BOX", :controller=>'index', :action=>'dm_inbox' %><br>
+      <%= link_to "送信BOX", :controller=>'index', :action=>'dm_send_box' %><br>
+      <%= link_to "送信", :controller=>'index', :action=>'dm_send' %><br>
+      <br><br>
+    </div>
   <% else %>
     <div id="navi"> 
       <p><strong>copytterへようこそ。</strong><br>
