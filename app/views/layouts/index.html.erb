@@ -9,7 +9,7 @@
 </head> 
 <body> 
 <div id="container"> 
-  <div id="header"><h1>copytter</h1></div> 
+  <div id="header"><h1>chirpy</h1></div> 
     <div id="wrapper"> 
       <div id="content"> 
         <%= yield %> 
@@ -38,14 +38,16 @@
     </div>
     <div id="dm">
       <%= link_to "DM-BOX", :controller=>'index', :action=>'dm_box' %><br>
+    <% if false %>
       <%= link_to "受信BOX", :controller=>'index', :action=>'dm_inbox' %><br>
       <%= link_to "送信BOX", :controller=>'index', :action=>'dm_send_box' %><br>
       <%= link_to "送信", :controller=>'index', :action=>'dm_send' %><br>
+    <% end %>
       <br><br>
     </div>
   <% else %>
     <div id="navi"> 
-      <p><strong>copytterへようこそ。</strong><br>
+      <p><strong>chirpyへようこそ。</strong><br>
         twitter IDを使ってログインしてください。OAuth対応ですので当サービスにパスワード情報を知らせる必要はありません。 
       </p>
       <p>
